@@ -1,7 +1,8 @@
 package by.legan.library.netengine;
 
-import com.leganas.firealert.engine.controller.ClientController;
-import com.leganas.firealert.engine.controller.ServerController;
+
+import by.legan.library.netengine.controller.ClientController;
+import by.legan.library.netengine.controller.ServerController;
 
 /**
  * Created by AndreyLS on 15.02.2017.

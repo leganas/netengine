@@ -23,7 +23,6 @@ import java.util.ArrayList;
  */
 
 public class ServerController extends ProgController<WorkData> implements AbstractServer.NetServerListener, Manager.ManagerListener {
-    /**Интерфейс обратной связи c Окном графического интерфейса, через назначенного слушателя*/
     public interface GUIListener {
         public void GUIMessage(Object msg);
     }

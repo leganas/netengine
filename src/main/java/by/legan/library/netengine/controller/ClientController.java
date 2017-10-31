@@ -18,7 +18,6 @@ import java.util.ArrayList;
  * Created by AndreyLS on 08.02.2017.
  */
 public class ClientController extends ProgController<WorkData> implements AbstractClient.NetClientListener, Manager.ManagerListener {
-    /**Интерфейс обратной связи c Окном графического интерфейса, через назначенного слушателя*/
     public interface GUIListener {
         public void GUIMessage(Object msg);
     }

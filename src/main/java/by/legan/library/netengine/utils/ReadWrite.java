@@ -28,7 +28,7 @@ public class ReadWrite {
                 out.print(text);
             } finally {
                 //После чего мы должны закрыть файл
-                //Иначе файл не запишется
+
                 out.close();
             }
         } catch(IOException e) {
