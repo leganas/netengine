@@ -6,7 +6,7 @@ import by.legan.library.netengine.interfaces.Disposable;
 import by.legan.library.netengine.interfaces.Net;
 
 /**
- * Описывает обстрактного клиента сетевого движка
+ * Описывает обстрактного клиента сетевого движка сука
  * */
 public abstract class AbstractClient extends Net<ClientController> implements Disposable {
 	String name;
