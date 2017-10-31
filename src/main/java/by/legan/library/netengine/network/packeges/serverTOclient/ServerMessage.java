@@ -30,7 +30,7 @@ public abstract class ServerMessage extends Message<ClientController> {
 		@Override
 		public Event ResponseMessage(ClientController controller, int id) {
 			Logs.out("Получен ответ от сервера, ReturnServerInfo");
-			Logs.out("Server Namemvn : " + getName());
+			Logs.out("Server Name : " + getName());
 			// Возвращаем самого себя что бы отработал GUI
 			return this;
 		}
