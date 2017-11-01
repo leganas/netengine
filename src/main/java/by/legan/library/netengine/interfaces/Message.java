@@ -9,8 +9,8 @@ public abstract class Message<T> extends Event{
 
 	/** Базовый метод который реализует через абстрактный replyMessage ответ на Message*/
 	@Override
-	public Event Apply(ProgController<?> progController, int id) {
+	public Event Apply(ProgramController<?> programController, int id) {
 		// Базовый метод который реализует через абстрактный ответ на Message
-		return  ResponseMessage((T) progController,id);
+		return  ResponseMessage((T) programController,id);
 	}
 }

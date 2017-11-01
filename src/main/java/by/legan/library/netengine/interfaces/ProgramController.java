@@ -1,10 +1,38 @@
 package by.legan.library.netengine.interfaces;
 
 
-import by.legan.library.netengine.Status;
-
 /**Абстрактный контроллер*/
-public abstract class ProgController<T> implements Disposable {
+public abstract class ProgramController<T> implements Disposable {
+
+	public enum Status {
+		Stop,
+		Init,
+		Start,
+		Run,
+		Dispose
+	}
+
+	// Имя потока обновления текущего контроллера
+	String name;
+	// Статус состояния контроллера в котором он находится
+	protected Status status = Status.Stop;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	long sleepMillis=0;
 	int sleepNano=500;
 
@@ -26,7 +54,7 @@ public abstract class ProgController<T> implements Disposable {
 
 	boolean updateRun = false; // Флаг определяющий работу фонового потока обновления
 
-	public class Update implements Runnable {
+	private class Update implements Runnable {
 		@Override
 		public void run() {
 			while (updateRun) {
@@ -38,28 +66,30 @@ public abstract class ProgController<T> implements Disposable {
 				}
 			}
 			Logs.out("Thread " + threadUpdate.getName() + " stop");
-			if (Status.statusServer == Status.StatusServer.dispose) System.exit(0);
+			if (status == Status.Dispose) System.exit(0);
 		}
 	}
 
-	void startUpdateThread(){
+	public void startUpdateThread(){
 		Logs.out("Thread " + threadUpdate.getName() + " run");
+		threadUpdate = new Thread(new Update());
+		threadUpdate.setName("Update" + name);
 		updateRun = true;
 		threadUpdate.start();
+		status = Status.Run;
 	}
 
-	void stopUpdateThread(){
+	public void stopUpdateThread(){
+		status = Status.Stop;
 		updateRun = false;
 	}
 
-	public T items;
+	private T items;
 	Thread threadUpdate;
 
-	public ProgController(String name){
-		init();
-		threadUpdate = new Thread(new Update());
-		threadUpdate.setName("Update" + name);
-		startUpdateThread();
+	public ProgramController(String name){
+		this.name = name;
+		status = Status.Init;
 	}
 
 	public T getItems() {
@@ -70,11 +100,6 @@ public abstract class ProgController<T> implements Disposable {
 		this.items = items;
 	}
 
-	/***
-	 * Вызывается перед запуском основного потока обновления контроллера
-	 */
-	public abstract void init();
-
 	/**
 	 * Вызывается в фоновом потоке с интервалом 	long sleepMillis=0;	 int sleepNano=500;
 	 * */
@@ -82,6 +107,7 @@ public abstract class ProgController<T> implements Disposable {
 
 	public void dispose() {
 		stopUpdateThread();
+		status = Status.Dispose;
 	}
 	
 }

@@ -1,17 +1,25 @@
 package by.legan.library.netengine.network.client;
 
 
-import by.legan.library.netengine.controller.ClientController;
+import by.legan.library.netengine.controller.NetClientController;
 import by.legan.library.netengine.interfaces.Disposable;
 import by.legan.library.netengine.interfaces.Net;
 
 /**
  * Описывает обстрактного клиента сетевого движка сука
  * */
-public abstract class AbstractClient extends Net<ClientController> implements Disposable {
+public abstract class AbstractClient extends Net<NetClientController> implements Disposable {
+	public enum NetClientStatus {
+		init,
+		offline,
+		online
+	}
+
 	String name;
 
-	public AbstractClient(ClientController clientGameController) {
+	NetClientStatus status = NetClientStatus.init;
+
+	public AbstractClient(NetClientController clientGameController) {
 		super(clientGameController);
 	}
 
@@ -30,7 +38,7 @@ public abstract class AbstractClient extends Net<ClientController> implements Di
 		netClientListener.netClientMessage(event);
 	}
 
-	public abstract void sendtoTCP(Object message);
+	public abstract void sendToTCP(Object message);
 
 	public void sendMessage(Object message) {
 	}

@@ -14,7 +14,7 @@ public abstract class Event {
 	}
 
 	/**Метод реализующий реакцию на событие
-	 * @param progController - Контроллер с помощью которого будет реализовано выполнение
+	 * @param programController - Контроллер с помощью которого будет реализовано выполнение
 	 * @param id - идентификатор создавшего событие (-1 если неизвестен, (по умолчанию))*/
-	public abstract Event Apply(ProgController<?> progController, int id);
+	public abstract Event Apply(ProgramController<?> programController, int id);
 }

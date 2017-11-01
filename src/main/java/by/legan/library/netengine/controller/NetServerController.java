@@ -1,12 +1,10 @@
 package by.legan.library.netengine.controller;
 
-import by.legan.library.netengine.Assets;
-import by.legan.library.netengine.Status;
-import by.legan.library.netengine.WorkData;
 import by.legan.library.netengine.controller.eventManager.ServerEventManager;
 import by.legan.library.netengine.interfaces.Logs;
 import by.legan.library.netengine.interfaces.Manager;
-import by.legan.library.netengine.interfaces.ProgController;
+import by.legan.library.netengine.interfaces.ProgramController;
+import by.legan.library.netengine.interfaces.WorkData;
 import by.legan.library.netengine.network.packeges.clientTOserver.ClientMessage;
 import by.legan.library.netengine.network.packeges.serverTOclient.ServerMessage;
 import by.legan.library.netengine.network.server.AbstractServer;
@@ -19,14 +17,13 @@ import java.util.ArrayList;
  * Назначение :
  * - создаёт и запускает NetServer
  * - управляет всей внутренней работой сервера
- * - Обновляет WorkData , и отсылает по запросу или по таймеру копию клиенту
+ * - Обновляет WorkDataBase , и отсылает по запросу или по таймеру копию клиенту
  */
 
-public class ServerController extends ProgController<WorkData> implements AbstractServer.NetServerListener, Manager.ManagerListener {
+public class NetServerController extends ProgramController<WorkData> implements AbstractServer.NetServerListener, Manager.ManagerListener {
     public interface GUIListener {
         public void GUIMessage(Object msg);
     }
-
 
     NetServer server;
     ServerEventManager serverEventManager;
@@ -41,29 +38,15 @@ public class ServerController extends ProgController<WorkData> implements Abstra
         this.guiListener = guiListener;
     }
 
-    public ServerController(String name) {
+    public NetServerController(String name) {
         super(name);
-        sendQuery = new ArrayList<>();
-    }
-
-
-    @Override
-    public void init() {
-        Status.statusServer = Status.StatusServer.init;
         server =  new NetServer(this);
         server.setGameServerListener(this);
         serverEventManager = new ServerEventManager(this);
         serverEventManager.setListener(this);
-        Assets.workData = new WorkData();
-        TestCardGenerate();
+        sendQuery = new ArrayList<>();
+        startUpdateThread();
     }
-
-    private void TestCardGenerate(){
-//        NetClientCard card = new NetClientCard();
-//        card.setName("Андрей");
-//        Assets.workData.getOnlineDriver().add(card);
-    }
-
 
     public void addServerMessageToQuery(ServerMessage msg){
         synchronized (sendQuery) {
@@ -89,8 +72,7 @@ public class ServerController extends ProgController<WorkData> implements Abstra
     @Override
     public void update() {
         sendAllQueryToClient();
-        if (Status.statusServer == Status.StatusServer.dispose) dispose();
-        if (Status.statusServer == Status.StatusServer.turn) System.exit(0);
+        if (status == Status.Dispose) dispose();
         // Выполняем команда в отдельном потоке сервер контроллера
         if (serverEventManager != null){
             serverEventManager.process();
@@ -123,7 +105,6 @@ public class ServerController extends ProgController<WorkData> implements Abstra
             Logs.out("Server : Сформирован ответ для клиента, отправляем - " +msg);
             // Получили от евент менеджера сообщение для клиента значит отправляем клиенту
             addServerMessageToQuery((ServerMessage) msg);
-//            server.sendtoTCP(m.get_id(),msg);
         }
     }
 

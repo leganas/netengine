@@ -1,12 +1,9 @@
 package by.legan.library.netengine.controller;
 
-import by.legan.library.netengine.Assets;
-import by.legan.library.netengine.Setting;
-import by.legan.library.netengine.Status;
-import by.legan.library.netengine.WorkData;
 import by.legan.library.netengine.controller.eventManager.ClientEventManager;
 import by.legan.library.netengine.interfaces.Manager;
-import by.legan.library.netengine.interfaces.ProgController;
+import by.legan.library.netengine.interfaces.ProgramController;
+import by.legan.library.netengine.interfaces.WorkData;
 import by.legan.library.netengine.network.client.AbstractClient;
 import by.legan.library.netengine.network.client.NetClient;
 import by.legan.library.netengine.network.packeges.clientTOserver.ClientMessage;
@@ -17,15 +14,17 @@ import java.util.ArrayList;
 /**
  * Created by AndreyLS on 08.02.2017.
  */
-public class ClientController extends ProgController<WorkData> implements AbstractClient.NetClientListener, Manager.ManagerListener {
+public class NetClientController extends ProgramController<WorkData> implements AbstractClient.NetClientListener, Manager.ManagerListener {
     public interface GUIListener {
         public void GUIMessage(Object msg);
     }
 
     public NetClient client;
+    public String host;
     ClientEventManager clientEventManager;
     ArrayList<ClientMessage> sendQuery;
     GUIListener guiListener;
+
 
     public GUIListener getGuiListener() {
         return guiListener;
@@ -35,19 +34,17 @@ public class ClientController extends ProgController<WorkData> implements Abstra
         this.guiListener = guiListener;
     }
 
-    public ClientController(String name) {
+    public NetClientController(String name, String IP) {
         super(name);
-        sendQuery = new ArrayList<>();
-    }
-
-    @Override
-    public void init() {
-        client = new NetClient(this, Setting.IPAdressFromClient);
+        host = IP;
+        client = new NetClient(this);
         client.setNetClientListener(this);
         clientEventManager = new ClientEventManager(this);
         clientEventManager.setListener(this);
-        if (Assets.workData == null) Assets.workData = new WorkData();
+        sendQuery = new ArrayList<>();
+        startUpdateThread();
     }
+
 
     public void addClientMessageToQuery(ClientMessage msg){
         synchronized (sendQuery) {
@@ -59,7 +56,7 @@ public class ClientController extends ProgController<WorkData> implements Abstra
         synchronized (sendQuery) {
             if (sendQuery.size() > 0) {
                 for (int i = 0; i < sendQuery.size(); i++) {
-                    client.sendtoTCP(sendQuery.get(i));
+                    client.sendToTCP(sendQuery.get(i));
                 }
                 sendQuery.clear();
             }
@@ -68,9 +65,7 @@ public class ClientController extends ProgController<WorkData> implements Abstra
 
     @Override
     public void update() {
-        if (Status.clientStatus != Status.ClientStatus.offline) {
-            sendAllQueryToServer();
-        }
+        sendAllQueryToServer();
         if (clientEventManager != null) clientEventManager.process();
     }
 
@@ -91,13 +86,10 @@ public class ClientController extends ProgController<WorkData> implements Abstra
 
     @Override
     public void ListenerMessage(Object msg) {
-        // Если в результате выполения команды/сообщения от сервака сформирован ответ то отправим его нахуй
-        // Нашуму GUI и за одно назад серверу что бы он сука знал что мы получили его сообщения и действуем
-        // хотя он сука и так знает что мы получили но пусть блять будет уверен в этом :)
+        // Если в результате выполения команды/сообщения от сервака сформирован ответ то отправим его нахуй GUI
         if (guiListener != null) guiListener.GUIMessage(msg);
         if (msg instanceof ClientMessage) {
             addClientMessageToQuery((ClientMessage) msg);
-            // client.sendtoTCP(msg);
         }
     }
 }

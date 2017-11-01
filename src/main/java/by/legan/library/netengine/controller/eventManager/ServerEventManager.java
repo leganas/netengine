@@ -1,7 +1,7 @@
 package by.legan.library.netengine.controller.eventManager;
 
 import by.legan.library.netengine.interfaces.Manager;
-import by.legan.library.netengine.interfaces.ProgController;
+import by.legan.library.netengine.interfaces.ProgramController;
 import by.legan.library.netengine.network.packeges.clientTOserver.ClientMessage;
 
 /**
@@ -10,7 +10,7 @@ import by.legan.library.netengine.network.packeges.clientTOserver.ClientMessage;
  */
 public class ServerEventManager extends Manager<ClientMessage> {
 
-    public ServerEventManager(ProgController<?> progController) {
-        super(progController);
+    public ServerEventManager(ProgramController<?> programController) {
+        super(programController);
     }
 }

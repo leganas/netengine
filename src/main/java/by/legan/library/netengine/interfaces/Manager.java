@@ -13,19 +13,19 @@ public abstract class Manager<T extends Event>{
 	
 	
 	protected ArrayList<T> eventQueue = new ArrayList<T>();
-	public ProgController<?> progController;
+	public ProgramController<?> programController;
 	public ManagerListener listener;
 	
-	public Manager(ProgController<?> progController) {
+	public Manager(ProgramController<?> programController) {
 		super();
-		this.progController = progController;
+		this.programController = programController;
 	}
 	
 	
 	public void process(){
 		 synchronized (eventQueue) {
 			 for (T event : eventQueue) {
-				 Object msg = ((Event)event).Apply(progController,((Event) event).getId());
+				 Object msg = ((Event)event).Apply(programController,((Event) event).getId());
 				 if (listener != null) listener.ListenerMessage(msg);
 			 }
 			 eventQueue.clear();

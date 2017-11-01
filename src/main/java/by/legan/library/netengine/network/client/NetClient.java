@@ -2,10 +2,9 @@
 package by.legan.library.netengine.network.client;
 
 
-import by.legan.library.netengine.Status;
-import by.legan.library.netengine.controller.ClientController;
+import by.legan.library.netengine.controller.NetClientController;
+import by.legan.library.netengine.interfaces.Logs;
 import by.legan.library.netengine.network.Network;
-import by.legan.library.netengine.network.packeges.GeneralMessages;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -13,13 +12,10 @@ import com.esotericsoftware.kryonet.Listener;
 import java.io.IOException;
 
 public class NetClient extends AbstractClient{
+	ClientInfo info;
 	Client client;
 
-	public NetClient(ClientController clientGameController) {
-		super(clientGameController);
-	}
-
-	public NetClient (final ClientController clientGameController, String myhost) {
+	public NetClient(NetClientController clientGameController) {
 		super(clientGameController);
 		client = new Client(256000,256000);
 		client.start();
@@ -30,11 +26,12 @@ public class NetClient extends AbstractClient{
 
 		client.addListener(new Listener() {
 			public void connected (Connection connection) {
-				GeneralMessages.RegisterName registerName = new GeneralMessages.RegisterName();
-				registerName.name = name;
-				client.sendTCP(registerName);
-				ClientInfo.UserID = client.getID();
-				Status.clientStatus = Status.ClientStatus.online;
+//				GeneralMessages.RegisterName registerName = new GeneralMessages.RegisterName();
+//				registerName.name = name;
+//				client.sendTCP(registerName);
+				info = new ClientInfo();
+				info.UserID = client.getID();
+				status = NetClientStatus.online;
 			}
 
 			public void received (Connection connection, Object object) {
@@ -42,13 +39,13 @@ public class NetClient extends AbstractClient{
 			}
 
 			public void disconnected (Connection connection) {
-//				Gdx.app.log("LGame", "netClient server down");
+				Logs.out("netClient disconnected");
 			}
 		});
 
-		String input = myhost;
+		String input = clientGameController.host;
 		final String host = input.trim();
-		
+
 		input = "ClientName";
 		name = input.trim();
 
@@ -62,10 +59,9 @@ public class NetClient extends AbstractClient{
 			}
 		}.start();
 	}
-	
-	
+
 	@Override
-	public void sendtoTCP(Object message) {
+	public void sendToTCP(Object message) {
 		sendMessage(message);
 	}
 
@@ -73,12 +69,13 @@ public class NetClient extends AbstractClient{
 	try {
 		client.sendTCP(message);
 	} catch (Exception e) {
+		Logs.out(e.toString());
 	}
 	}
 
 	@Override
 	public void dispose() {
 		client.stop();
-//		Gdx.app.log("LGame", "netClient disconect from the server and dispose");
+		Logs.out("netClient disconnected from the server and dispose");
 	}
 }

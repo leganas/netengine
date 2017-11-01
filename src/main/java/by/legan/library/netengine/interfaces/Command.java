@@ -5,8 +5,8 @@ public abstract class Command<T> extends Event{
 	public abstract Event ApplyCommand(T controller);
 	
 	@Override
-	public Event Apply(ProgController<?> progController, int id) {
-		return  ApplyCommand((T) progController);
+	public Event Apply(ProgramController<?> programController, int id) {
+		return  ApplyCommand((T) programController);
 	}
 
 }
