@@ -71,9 +71,9 @@ public abstract class ProgramController<T> implements Disposable {
 	}
 
 	public void startUpdateThread(){
-		Logs.out("Thread " + threadUpdate.getName() + " run");
 		threadUpdate = new Thread(new Update());
 		threadUpdate.setName("Update" + name);
+		Logs.out("Thread " + threadUpdate.getName() + " run");
 		updateRun = true;
 		threadUpdate.start();
 		status = Status.Run;
