@@ -17,6 +17,10 @@ public abstract class AbstractClient extends Net<NetClientController> implements
 
 	String name;
 
+	public NetClientStatus getStatus() {
+		return status;
+	}
+
 	NetClientStatus status = NetClientStatus.init;
 
 	public AbstractClient(NetClientController clientGameController) {

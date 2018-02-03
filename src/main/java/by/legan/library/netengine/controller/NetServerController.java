@@ -45,7 +45,15 @@ public class NetServerController extends ProgramController<WorkData> implements 
         serverEventManager = new ServerEventManager(this);
         serverEventManager.setListener(this);
         sendQuery = new ArrayList<>();
+    }
+
+    public boolean start(){
         startUpdateThread();
+        return server.start();
+    }
+
+    public void stop(){
+        dispose();
     }
 
     public void addServerMessageToQuery(ServerMessage msg){

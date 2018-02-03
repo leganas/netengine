@@ -50,12 +50,17 @@ public class NetServer extends AbstractServer{
 				}
 			}
 		});
+	}
+
+	public boolean start(){
 		try {
 			server.bind(Network.portTCP, Network.portUDP);
 			server.start();
+			return true;
 		} catch (Exception e) {
 			Logs.out("ERROR Server already running");
 			System.exit(0);
+			return false;
 		}
 	}
 	
@@ -66,8 +71,8 @@ public class NetServer extends AbstractServer{
 	@Override
 	public void dispose(){
 		server.stop();
-		Logs.out("Server stop");
-    }
+		Logs.out("NetServer stopped and dispose");
+	}
 
 	public void sendToAllUDP(Object message){
 		server.sendToAllUDP(message);

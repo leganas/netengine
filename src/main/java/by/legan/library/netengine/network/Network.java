@@ -6,18 +6,26 @@ import by.legan.library.netengine.network.packeges.serverTOclient.ServerMessage;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
+import java.lang.annotation.*;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 // This class is a convenient place to keep things common to both the client and server.
 public class Network {
-	static public final int portTCP = 8900;
-	static public final int portUDP = 8902;
 
-	public static int getPorttcp() {
+	static public int portTCP = 8900;
+	static public int portUDP = 8902;
+
+	public static void setPortTCP(int portTCP) {
+		Network.portTCP = portTCP;
+	}
+	public static void setPortUDP(int portUDP) {
+		Network.portUDP = portUDP;
+	}
+	public static int getPortTCP() {
 		return portTCP;
 	}
-
-	public static int getPortudp() {
+	public static int getPortUDP() {
 		return portUDP;
 	}
 

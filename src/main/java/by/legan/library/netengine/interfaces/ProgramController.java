@@ -1,6 +1,11 @@
 package by.legan.library.netengine.interfaces;
 
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**Абстрактный контроллер*/
 public abstract class ProgramController<T> implements Disposable {
 
@@ -72,7 +77,7 @@ public abstract class ProgramController<T> implements Disposable {
 
 	public void startUpdateThread(){
 		threadUpdate = new Thread(new Update());
-		threadUpdate.setName("Update" + name);
+		threadUpdate.setName("Update | " + name);
 		Logs.out("Thread " + threadUpdate.getName() + " run");
 		updateRun = true;
 		threadUpdate.start();
@@ -86,6 +91,9 @@ public abstract class ProgramController<T> implements Disposable {
 
 	private T items;
 	Thread threadUpdate;
+
+	public ProgramController(){
+	}
 
 	public ProgramController(String name){
 		this.name = name;

@@ -9,12 +9,36 @@ import by.legan.library.netengine.network.client.NetClient;
 import by.legan.library.netengine.network.packeges.clientTOserver.ClientMessage;
 import by.legan.library.netengine.network.packeges.serverTOclient.ServerMessage;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 /**
  * Created by AndreyLS on 08.02.2017.
  */
 public class NetClientController extends ProgramController<WorkData> implements AbstractClient.NetClientListener, Manager.ManagerListener {
+    @Target(value= ElementType.TYPE)
+    @Retention(value= RetentionPolicy.RUNTIME)
+    public @interface NetworkPrameters {
+        enum Protocol {
+            TCP,
+            UDP
+        }
+        Protocol protocol();
+        int port();
+        String host();
+    }
+
+    @Target(value= ElementType.METHOD)
+    @Retention(value= RetentionPolicy.RUNTIME)
+    public @interface PortUDP {
+        int portUDP();
+    }
+
     public interface GUIListener {
         public void GUIMessage(Object msg);
     }
@@ -34,6 +58,10 @@ public class NetClientController extends ProgramController<WorkData> implements 
         this.guiListener = guiListener;
     }
 
+    public NetClientController(String IP) {
+        this(null,IP);
+    }
+
     public NetClientController(String name, String IP) {
         super(name);
         host = IP;
@@ -42,7 +70,15 @@ public class NetClientController extends ProgramController<WorkData> implements 
         clientEventManager = new ClientEventManager(this);
         clientEventManager.setListener(this);
         sendQuery = new ArrayList<>();
+    }
+
+    public void start(){
+        client.connect();
         startUpdateThread();
+    }
+
+    public void  stop(){
+        dispose();
     }
 
 
