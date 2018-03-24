@@ -71,7 +71,9 @@ public abstract class ProgramController<T> implements Disposable {
 				}
 			}
 			Logs.out("Thread " + threadUpdate.getName() + " stop");
-			if (status == Status.Dispose) System.exit(0);
+			if (status == Status.Dispose) {
+			//	System.exit(0);
+			}
 		}
 	}
 
