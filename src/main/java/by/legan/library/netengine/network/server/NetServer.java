@@ -59,7 +59,7 @@ public class NetServer extends AbstractServer{
 			return true;
 		} catch (Exception e) {
 			Logs.out("ERROR Server already running");
-			System.exit(0);
+			// System.exit(0);
 			return false;
 		}
 	}

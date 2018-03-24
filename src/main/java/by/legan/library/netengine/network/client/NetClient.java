@@ -65,7 +65,8 @@ public class NetClient extends AbstractClient{
 				try {
 					client.connect(50000, programController.host, Network.portTCP, Network.portUDP);
 				} catch (IOException ex) {
-					System.exit(0);
+					Logs.out(ex.toString());
+					// System.exit(0);
 				}
 			}
 		}.start();

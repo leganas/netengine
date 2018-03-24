@@ -40,13 +40,13 @@ public class ControllerConnectionTest {
     @Test(timeout = 10000)
     public void controller_Interaction_test() {
 
-        System.out.println("TEST : запускам Сервер");
+        System.out.println("TEST : Start server");
         netServerController = new NetServerController("Server");
         assertEquals(true,netServerController.start());
-        System.out.println("TEST : запуск сервера удачный");
+        System.out.println("TEST : Start server successful");
 
 
-        System.out.println("TEST : запускаем Клиента");
+        System.out.println("TEST : Start client");
         netClientController = new NetClientController("127.0.0.1");
         netClientController.start();
 
@@ -60,14 +60,14 @@ public class ControllerConnectionTest {
         } while (netClientController.client.getStatus() != AbstractClient.NetClientStatus.online);
 
         assertEquals(netClientController.client.getStatus(), AbstractClient.NetClientStatus.online);
-        System.out.println("TEST : коннект клиент сервер состоялся");
+        System.out.println("TEST : Connect client server successful");
 
     }
 
     @AfterClass
     public static void off(){
         // Тушим клиента и сервер
-        System.out.println("TEST : Тушим сервер и клиента");
+        System.out.println("TEST : Shut down client and server");
 
         if (netClientController != null) netClientController.stop();
         if (netServerController != null) netServerController.stop();
