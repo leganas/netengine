@@ -6,7 +6,8 @@
 
     <groupId>by.legan.library</groupId>
     <artifactId>NetEngine</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <!--<version>1.8-SNAPSHOT</version>-->
+    <version>1.4</version>
     <packaging>jar</packaging>
 
     <distributionManagement>
