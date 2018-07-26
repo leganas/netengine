@@ -19,35 +19,26 @@ public class NetServer extends AbstractServer{
 		super(netServerController);
 		server = new Server(256000,256000) {
 			protected Connection newConnection () {
-				// By providing our own connection implementation, we can store per
-				// connection state without a connection ID to state look up.
 				status = NetServerStatus.online;
-				return new SConnection();
+				SConnection connection = new SConnection();
+				connection.name = "client";
+				netServerListener.netServerMessage(connection.getID(),new ClientMessage.NewClientConnect());
+				return connection;
 			}
 		};
 
-		// For consistency, the classes to be sent over the network are
-		// registered by the same method for both the client and server.
-		Network.register(server);
+		Network.register(server, netServerController.classArrayList);
 		server.addListener(new Listener() {
-			public void received (Connection c, Object object) {
-				// We know all connections for this server are actually ChatConnections.
-				SConnection connection = (SConnection)c;
-				netServerListener.netServerMessage(connection.getID(),object);
+			public void received (Connection connection, Object object) {
+				// Отправляем на уровень NetServerController сообщение пришедшее от клиента
+				SConnection connect = (SConnection)connection;
+				netServerListener.netServerMessage(connect.getID(),object);
 			}
 
-			public void disconnected (Connection c) {
-				SConnection connection = (SConnection)c;
-				if (connection.name != null) {
-					// Announce to everyone that someone (with a registered name) has left.
-//					GeneralMessages.ChatMessage chatMessage = new GeneralMessages.ChatMessage();
-//					chatMessage.text = connection.name + " disconnected.";
-//					server.sendToAllTCP(chatMessage);
-//					updateNames();
-//					ClientMessage.DisconectPlayer msg = new ClientMessage.DisconectPlayer();
-//					netServerListener.netServerMessage(c.getID(), msg);
-					Logs.out("User : " + c.getID() + " disconnected");
-				}
+			public void disconnected (Connection connection) {
+				// Оповещаем NetServerController о том что клиент отключился
+				SConnection conn = (SConnection)connection;
+				netServerListener.netServerMessage(conn.getID(),new ClientMessage.ClientDisconnect(conn.getID()));
 			}
 		});
 	}
@@ -59,13 +50,17 @@ public class NetServer extends AbstractServer{
 			return true;
 		} catch (Exception e) {
 			Logs.out("ERROR Server already running");
-			// System.exit(0);
 			return false;
 		}
 	}
 	
 	public int getCollClient(){
 		return server.getConnections().length;
+	}
+
+
+	public Connection[] getConnections(){
+		return server.getConnections();
 	}
 
 	@Override

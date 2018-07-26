@@ -48,7 +48,7 @@ public class NetClientController extends ProgramController<WorkData> implements 
     ClientEventManager clientEventManager;
     ArrayList<ClientMessage> sendQuery;
     GUIListener guiListener;
-
+    public ArrayList<Class> classArrayList;
 
     public GUIListener getGuiListener() {
         return guiListener;
@@ -59,12 +59,13 @@ public class NetClientController extends ProgramController<WorkData> implements 
     }
 
     public NetClientController(String IP) {
-        this(null,IP);
+        this(null,IP, null);
     }
 
-    public NetClientController(String name, String IP) {
+    public NetClientController(String name, String IP, ArrayList<Class> classArrayList) {
         super(name);
         host = IP;
+        this.classArrayList = classArrayList;
         client = new NetClient(this);
         client.setNetClientListener(this);
         clientEventManager = new ClientEventManager(this);

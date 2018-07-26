@@ -30,7 +30,7 @@ public class Network {
 	}
 
 	// This registers objects that are going to be sent over the network.
-	static public void register (EndPoint endPoint) {
+	static public void register (EndPoint endPoint, ArrayList<Class> classArrayList) {
 		Kryo kryo = endPoint.getKryo();
 		kryo.register(float[].class);
 		kryo.register(int[].class);
@@ -41,9 +41,19 @@ public class Network {
 
 		kryo.register(ClientMessage.class);
 		kryo.register(ClientMessage.RequestServerInfo.class);
+		kryo.register(ClientMessage.ClientDisconnect.class);
+		kryo.register(ClientMessage.NewClientConnect.class);
 
 		kryo.register(ServerMessage.class);
 		kryo.register(ServerMessage.ReturnServerInfo.class);
+		kryo.register(ServerMessage.ServerDisconnect.class);
+		kryo.register(ServerMessage.AcceptConnected.class);
+
+		if (classArrayList != null) {
+			for (Class clas: classArrayList) {
+				kryo.register(clas);
+			}
+		}
 	}
 
 }

@@ -47,7 +47,7 @@ public class NetEngineTest {
     public void a_controller_Interaction_test() {
 
         System.out.println("TEST : Start server");
-        netServerController = new NetServerController("Server");
+        netServerController = new NetServerController("Server",null);
         assertEquals(true,netServerController.start());
         System.out.println("TEST : Start server successful");
 

@@ -9,6 +9,7 @@ import by.legan.library.netengine.network.packeges.clientTOserver.ClientMessage;
 import by.legan.library.netengine.network.packeges.serverTOclient.ServerMessage;
 import by.legan.library.netengine.network.server.AbstractServer;
 import by.legan.library.netengine.network.server.NetServer;
+import com.esotericsoftware.kryonet.Connection;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ public class NetServerController extends ProgramController<WorkData> implements 
     ServerEventManager serverEventManager;
     ArrayList<ServerMessage> sendQuery;
     GUIListener  guiListener;
+    public ArrayList<Class> classArrayList;
 
     public GUIListener getGuiListener() {
         return guiListener;
@@ -38,8 +40,9 @@ public class NetServerController extends ProgramController<WorkData> implements 
         this.guiListener = guiListener;
     }
 
-    public NetServerController(String name) {
+    public NetServerController(String name, ArrayList<Class> classArrayList) {
         super(name);
+        this.classArrayList = classArrayList;
         server =  new NetServer(this);
         server.setGameServerListener(this);
         serverEventManager = new ServerEventManager(this);
@@ -75,6 +78,15 @@ public class NetServerController extends ProgramController<WorkData> implements 
             }
         }
     }
+
+    /**
+     * Получаем список всех подключенных клиентов
+     * @return список клиенктов
+     */
+    public Connection[] getConnections () {
+        return server.getConnections();
+    }
+
 
 
     @Override

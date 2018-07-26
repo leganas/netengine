@@ -9,6 +9,15 @@ import by.legan.library.netengine.interfaces.Message;
 /**Сообщение которые посылает сервер клиенту*/
 public abstract class ServerMessage extends Message<NetClientController> {
 
+	public static class ServerDisconnect extends ServerMessage{
+
+		@Override
+		public Event ResponseMessage(NetClientController controller, int id) {
+			Logs.out("ServerDisconnect");
+			return this;
+		}
+	}
+
 	public static class ReturnServerInfo extends ServerMessage{
 		String name;
 
@@ -29,6 +38,14 @@ public abstract class ServerMessage extends Message<NetClientController> {
 			Logs.out("Получен ответ от сервера, ReturnServerInfo");
 			Logs.out("Server Name : " + getName());
 			// Возвращаем самого себя что бы отработал GUI
+			return this;
+		}
+	}
+
+	public static class AcceptConnected extends ServerMessage{
+
+		@Override
+		public Event ResponseMessage(NetClientController controller, int id) {
 			return this;
 		}
 	}
