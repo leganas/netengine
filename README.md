@@ -13,7 +13,7 @@
   <dependency>
   <groupId>by.legan.library</groupId>
   <artifactId>NetEngine</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.8</version>
   </dependency>  
 ```
 
