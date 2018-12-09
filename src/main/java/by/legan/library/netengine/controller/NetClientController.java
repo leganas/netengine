@@ -75,7 +75,7 @@ public class NetClientController extends ProgramController<WorkData> implements 
 
     public void start(){
         client.connect();
-        startUpdateThread();
+        startUpdateThread(getName());
     }
 
     public void  stop(){

@@ -51,7 +51,7 @@ public class NetServerController extends ProgramController<WorkData> implements 
     }
 
     public boolean start(){
-        startUpdateThread();
+        startUpdateThread(getName());
         return server.start();
     }
 

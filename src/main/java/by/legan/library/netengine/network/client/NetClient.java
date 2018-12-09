@@ -48,6 +48,7 @@ public class NetClient extends AbstractClient{
 				clientNetController.netClientMessage(new ServerMessage.ServerDisconnect());
 			}
 		});
+		name = programController.getName();
 		if (programController.getName() == null) {
 			try {
 				InetAddress inet = InetAddress.getLocalHost();
@@ -61,7 +62,6 @@ public class NetClient extends AbstractClient{
                 programController.setName(name);
 			}
 		}
-		name = "Client : " + name;
         programController.setName(name);
 	}
 
